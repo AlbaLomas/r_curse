@@ -1,0 +1,171 @@
+---
+title: "ACTIVIAD TRANSVERSAL"
+format: html
+editor: visual
+---
+
+## Running Code
+
+**Ejercicio 1. Número de individuos totales, masculinos y femeninos por especie. La media, desviación estándar, valor mínimo y máximo de la longitud y profundidad del pico, la longitud de la aleta y el tamaño.**
+
+*Primero tenemos que instalar el paquete que descarga el data frame que se va a emplear (penguins)*.
+
+```{r}
+#| echo: false
+#install.packages("palmerpenguins")
+library(palmerpenguins)
+data(package = 'palmerpenguins')
+library(dplyr)
+View(penguins)
+```
+
+*Número de individuos totales:*
+
+```{r}
+#| echo: false
+n_individuos <- nrow(penguins)
+n_individuos
+```
+
+*Número de individuos masculinos y femeninos por especie:*
+
+```{r}
+#| echo: false
+species_names <- c("Adelie", "Gentoo", "Chinstrap" )
+genders <- c("female", "male")
+
+for (specie_ in species_names) {
+  for(gender in genders){
+    n1 <-filter(penguins, sex== gender & species == specie_)
+    cat("The number of"  , gender , "individuals in" , specie_, "species is :")
+    print(nrow(n1)[1])
+  }
+  
+}
+```
+
+*La media, desviación estándar, valor mínimo y máximo de la longitud del pico.*
+
+```{r}
+#| echo: false
+bill_length_media <- mean(penguins$bill_length_mm, na.rm = TRUE)
+bill_length_sd <- sd(penguins$bill_length_mm, na.rm = TRUE)
+min_bill_length <- min(penguins$bill_length_mm, na.rm = TRUE)
+max_bill_length <-max(penguins$bill_length_mm, na.rm = TRUE)
+
+cat("La media de la longitud del pico es:", bill_length_media, "\n")
+cat("La desviación estándar de la longitud del pico es:", bill_length_sd, "\n")
+cat("El valor mínimo de las mediciones de la longitud del pico es:", min_bill_length, "\n")
+cat("El valor máximo de las mediciones de la longitud del pico es:",max_bill_length )
+```
+
+*La media, desviación estándar, valor mínimo y máximo de la profundidad del pico.*
+
+```{r}
+#| echo: false
+bill_depth_media <- mean(penguins$bill_depth_mm, na.rm = TRUE)
+bill_depth_sd <- sd(penguins$bill_depth_mm, na.rm = TRUE)
+min_bill_depth <- min(penguins$bill_depth_mm, na.rm = TRUE)
+max_bill_depth <- max(penguins$bill_depth_mm, na.rm = TRUE)
+
+cat("La media de la profundidad del pico es:", bill_depth_media, "\n")
+cat("La desviación estándar de la profundidad del pico es:", bill_depth_sd, "\n")
+cat("El valor mínimo de las mediciones de la profundidad del pico es:", min_bill_depth, "\n")
+cat("El valor máximo de las mediciones de la profundidad del pico es:",max_bill_depth )
+```
+
+*La media, desviación estándar, valor mínimo y máximo de la longitud de la aleta.*
+
+```{r}
+#| echo: false
+flipper_length_media <- mean(penguins$flipper_length_mm, na.rm = TRUE)
+flipper_length_sd <- sd(penguins$flipper_length_mm, na.rm = TRUE)
+min_flipper_length <- min(penguins$flipper_length_mm, na.rm = TRUE)
+max_flipper_length <-max(penguins$flipper_length_mm, na.rm = TRUE)
+cat("La media de la longitud de la aleta es:", flipper_length_media, "\n")
+cat("La desviación estándar de la longitud de la aleta es:", flipper_length_sd, "\n")
+cat("El valor mínimo de las mediciones de la longitud de la aleta es:", min_flipper_length, "\n")
+cat("El valor máximo de las mediciones de la longitud de la aleta es:",max_flipper_length )
+```
+
+*La media, desviación estándar, valor mínimo y máximo del tamaño de la aleta.*
+
+```{r}
+#| echo: false
+body_mass_media <- mean(penguins$body_mass_g, na.rm = TRUE)
+body_mass_sd <- sd(penguins$body_mass_g, na.rm = TRUE)
+min_body_mass <- min(penguins$body_mass_g, na.rm = TRUE)
+max_body_mass <- max(penguins$body_mass_g, na.rm = TRUE)
+
+cat("La media del tamaño corporales:", body_mass_media, "\n")
+cat("La desviación estándar del tamaño corporal es:", body_mass_sd, "\n")
+cat("El valor mínimo de las mediciones del tamaño corporal es:", min_body_mass, "\n")
+cat("El valor máximo de las mediciones del tamaño corporal es:",max_body_mass )
+```
+
+**Ejercicio 2. Crea un gráfico de barras que represente el número de individuos muestreados de cada especie en cada isla, representando las especies en diferentes colores (chinstrap -- morado, gentoo -- azul, adelie -- naranja).**
+
+```{r}
+#| echo: false
+table<- (penguins$species)
+bar_plot_graph <- table(penguins$species, penguins$island)
+bar_plot_graph
+barplot(bar_plot_graph, col =c("orange", "purple","blue" ))
+```
+
+**Contesta a las siguientes preguntas: ¿qué especie se ha muestreado en las tres islas?**
+
+*La especie que se ha muestreado en las 3 islas es Adelie; ya que, el naranja es el único color que aparece en todas las especies en el gráfico.*
+
+**¿cuántos individuos se han muestreado de la isla Dream?**
+
+*Se han muestreado 123 individuos en la isla Dream.*
+
+```{r}
+#| echo: false
+dream_ind <- table(penguins$island)
+dream_ind["Dream"]
+```
+
+**Ejercicio 3.Un gráfico multipanel de cajas y bigotes del tamaño de los pingüinos según su sexo, donde aparezca un panel para cada especie.**
+
+```{r}
+#| echo: false
+penguins <- penguins[!is.na(penguins$bill_length_mm),]
+penguins <- penguins[!is.na(penguins$bill_depth_mm),]
+penguins <- penguins[!is.na(penguins$flipper_length_mm),]
+penguins <- penguins[!is.na(penguins$body_mass_g),]
+penguins <- penguins[!is.na(penguins$sex),]
+
+gentoo <- penguins[penguins$species == "Gentoo", ]
+#gentoo
+adelie <- penguins[penguins$species == "Adelie", ]
+#adelie
+chinstrap <- penguins[penguins$species == "Chinstrap", ]
+#chinstrap
+
+library(patchwork) 
+library(ggplot2)
+
+box_gentoo <- ggplot(data = gentoo) + 
+  geom_boxplot(aes(x = sex, y = body_mass_g)) + 
+  ggtitle("GENTOO") + xlab("Sex") + ylab("Size")
+
+box_adelie <- ggplot(data = adelie) + 
+  geom_boxplot(aes(x = sex, y = body_mass_g)) + 
+  ggtitle("ADELIE") + xlab("Sex") + ylab("Size")
+
+box_chinstrap <- ggplot(data = chinstrap) + 
+  geom_boxplot(aes(x = sex, y = body_mass_g))+
+  ggtitle("CHINSTRAP") + xlab("Sex") + ylab("Size")
+
+box_gentoo + box_adelie + box_chinstrap
+```
+
+**Contesta a las siguientes preguntas: ¿qué especie tiene mayor tamaño?**
+
+*La especie de mayor tamaño según los gráficos es Gentoo.*
+
+**¿en qué especie las hembras y los machos tienen un tamaño más similar?**
+
+*La especie en la que las hembras y los machos tienen un tamaño más similar es Chinstrap (sus medias son las más cercanas en el gráfico).*
